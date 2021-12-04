@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>寒战大卖-头像生成器</title>
-    <style>
-        @font-face {
-            font-family: ws138;
-            src: url('./resource/字魂138号-霸燃手书-3500常用字.ttf') format('truetype');
-        }
-    </style>
+    <!--    <style>-->
+    <!--        @font-face {-->
+    <!--            font-family: ws138;-->
+    <!--            src: url('./resource/字魂138号-霸燃手书-3500常用字.ttf') format('truetype');-->
+    <!--        }-->
+    <!--    </style>-->
 </head>
 <body>
 <div>
     <label for="name">请输入两个字：</label>
-    <input id="name" maxlength="2">
+    <input id="name" maxlength="2" value="逗年">
 </div>
 <canvas width="640" height="640"></canvas>
 <script>
-    const generate = async function () {
-        const canvas = document.querySelector("canvas");
-        const ctx = canvas.getContext("2d");
+    const canvas = document.querySelector("canvas");
+    const ctx = canvas.getContext("2d");
+    const inputElement = document.getElementById('name');
+    const FONT_SIZE = 290;
 
+    {
+        ctx.font = `${FONT_SIZE / 6}px ws138`;
+        ctx.fillText('字体加载中，请稍后……', 0, 320);
+    }
+
+    const generate = async function () {
         {
             const image = new Image();
             image.src = "./resource/头像模板-底图.png";
@@ -33,7 +40,6 @@
         }
 
         {
-            const FONT_SIZE = 290;
             ctx.font = `${FONT_SIZE}px ws138`;
             ctx.fillStyle = 'white';
             ctx.fillText(this.value[0] ?? '', 87, 205 + FONT_SIZE, 254);
@@ -52,12 +58,18 @@
         }
     };
 
-    const inputElement = document.getElementById('name');
-    inputElement.onkeyup = inputElement.onchange = generate;
-    inputElement.value = '逗年';
-    document.onreadystatechange = () => {
-        generate.call(inputElement);
+    document.onreadystatechange = async () => {
+        try {
+            const font = new FontFace('ws138', 'url("./resource/字魂138号-霸燃手书-3500常用字.ttf") format("truetype")');
+            await font.load();
+            document.fonts.add(font);
+            inputElement.onkeyup = inputElement.onchange = generate;
+            generate.call(inputElement);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
 
 </script>
 </body>
