@@ -19,6 +19,11 @@
             flex-direction: row;
             justify-content: center;
         }
+
+        button {
+            width: 4em;
+            font-size: 2em;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +35,9 @@
     <div>
         <canvas width="640" height="640"></canvas>
     </div>
-    <p>触控设备长按图片保存；PC右键图片保存。</p>
+    <div>
+        <a><button>下载</button></a>
+    </div>
 </div>
 <script>
     const IS_DEBUG = false;
@@ -121,6 +128,12 @@
             ctx.beginPath();
             ctx.arc(canvas.clientWidth / 2, canvas.clientHeight / 2, canvas.clientWidth / 2, 0, 2 * Math.PI);
             ctx.stroke();
+        }
+
+        {
+            const button = document.querySelector('a');
+            button.setAttribute('download', 'logo.png');
+            button.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
         }
     };
 
