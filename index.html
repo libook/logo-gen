@@ -3,31 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>寒战大卖-头像生成器</title>
-    <!--    <style>-->
-    <!--        @font-face {-->
-    <!--            font-family: ws138;-->
-    <!--            src: url('./resource/字魂138号-霸燃手书-3500常用字.ttf') format('truetype');-->
-    <!--        }-->
-    <!--    </style>-->
+    <style>
+        * {
+            font-size: 24px;
+        }
+
+        body > * {
+            margin-top: 1em;
+        }
+    </style>
 </head>
 <body>
 <div>
-    <label for="name">请输入两个字：</label>
-    <input id="name" maxlength="2" value="逗年">
+    <label for="name">请输入：</label>
+    <input id="name" maxlength="8" value="逗年">
 </div>
 <canvas width="640" height="640"></canvas>
 <script>
+    const IS_DEBUG = false;
+
+    const MAX_HEIGHT = 300;
+    const MAX_WIDTH = 460;
+
     const canvas = document.querySelector("canvas");
+
+    const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
+    const TOP = 300;
+    const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
+
+
     const ctx = canvas.getContext("2d");
     const inputElement = document.getElementById('name');
-    const FONT_SIZE = 290;
 
     {
-        ctx.font = `${FONT_SIZE / 6}px ws138`;
-        ctx.fillText('字体加载中，请稍后……', 0, 320);
+        ctx.font = `${canvas.clientWidth / 11}px ws138`;
+        ctx.fillText('字体加载中，请稍后……', 0, canvas.clientHeight / 2);
     }
 
     const generate = async function () {
+        const length = inputElement.value.length;
+
+        // let fontSize = (MAX_WIDTH+fontSize / 4*length) / length;
+        // fontSize*length=MAX_WIDTH+fontSize / 4*length
+        // MAX_WIDTH=fontSize*length-fontSize / 4*length
+        // MAX_WIDTH/fontSize=length-length / 4
+        let fontSize = MAX_WIDTH / (length * 3 / 4);
+
+        if (fontSize > MAX_HEIGHT) {
+            fontSize = MAX_HEIGHT;
+        }
+        let offset = fontSize / 4;
+        const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
+
+        console.log(`fontSize: ${fontSize}`);
+
         {
             const image = new Image();
             image.src = "./resource/头像模板-底图.png";
@@ -40,10 +69,20 @@
         }
 
         {
-            ctx.font = `${FONT_SIZE}px ws138`;
+            ctx.font = `${fontSize}px ws138`;
             ctx.fillStyle = 'white';
-            ctx.fillText(this.value[0] ?? '', 87, 205 + FONT_SIZE, 254);
-            ctx.fillText(this.value[1] ?? '', 290, 205 + FONT_SIZE, 254);
+            for (let index = 0; index < this.value.length; index++) {
+                const maxIndex = this.value.length - 1;
+                ctx.fillText(
+                    this.value[index] ?? '',
+                    LEFT
+                    + MAX_WIDTH / 2 // midperpendicular
+                    - fontSize / 2 // position while there is only one character
+                    + (index - maxIndex / 2) * (fontSize - offset), // add character to the left or to the right
+                    fontPositionY,
+                    fontSize,
+                );
+            }
         }
 
         {
@@ -55,6 +94,20 @@
                 };
             });
             ctx.drawImage(image, 0, 0);
+        }
+
+        if (IS_DEBUG) {
+            ctx.beginPath();
+            ctx.rect(LEFT, TOP, MAX_WIDTH, MAX_HEIGHT);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.rect(LEFT, FONT_POSITION_MIDDLE_Y, MAX_WIDTH, 1);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(canvas.clientWidth / 2, canvas.clientHeight / 2, canvas.clientWidth / 2, 0, 2 * Math.PI);
+            ctx.stroke();
         }
     };
 
