@@ -22,13 +22,13 @@
 <script>
     const IS_DEBUG = false;
 
-    const MAX_HEIGHT = 300;
-    const MAX_WIDTH = 460;
-
     const canvas = document.querySelector("canvas");
 
+    const MAX_HEIGHT = canvas.clientHeight / 2.133;
+    const MAX_WIDTH = canvas.clientWidth / 1.40;
+
     const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
-    const TOP = 300;
+    const TOP = canvas.clientHeight / 2.133;
     const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
 
 
