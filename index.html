@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>寒战大卖-头像生成器</title>
+    <title>逐浪-头像生成器by逗年</title>
     <style>
         * {
             font-size: 24px;
@@ -24,6 +24,11 @@
             width: 4em;
             font-size: 2em;
         }
+
+        .sign {
+            font-size: 0.7em;
+            color: #868686;
+        }
     </style>
 </head>
 <body>
@@ -38,17 +43,20 @@
     <div>
         <a><button>下载</button></a>
     </div>
+    <div>
+        <p class="sign">by 逗年</p>
+    </div>
 </div>
 <script>
     const IS_DEBUG = false;
 
     const canvas = document.querySelector("canvas");
 
-    const MAX_HEIGHT = canvas.clientHeight / 2.133;
-    const MAX_WIDTH = canvas.clientWidth / 1.40;
+    const MAX_HEIGHT = canvas.clientHeight / 2.9296875;
+    const MAX_WIDTH = canvas.clientWidth / 1.35;
 
     const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
-    const TOP = canvas.clientHeight / 2.133;
+    const TOP = canvas.clientHeight / 2.4;
     const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
 
 
@@ -56,7 +64,7 @@
     const inputElement = document.getElementById('name');
 
     {
-        ctx.font = `${canvas.clientWidth / 11}px ws138`;
+        ctx.font = `${canvas.clientWidth / 2.9296875}px ws138`;
         ctx.fillText('字体加载中，请稍后……', 0, canvas.clientHeight / 2);
     }
 
@@ -72,7 +80,7 @@
         if (fontSize > MAX_HEIGHT) {
             fontSize = MAX_HEIGHT;
         }
-        let offset = fontSize / 4;
+        let offset = fontSize / 9.375;
         const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
 
         console.log(`fontSize: ${fontSize}`);
@@ -90,7 +98,7 @@
 
         {
             ctx.font = `${fontSize}px ws138`;
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = '#FFE93B';
             for (let index = 0; index < this.value.length; index++) {
                 const maxIndex = this.value.length - 1;
                 ctx.fillText(
@@ -105,16 +113,16 @@
             }
         }
 
-        {
-            const image = new Image();
-            image.src = "./resource/头像模板-黄字.png";
-            await new Promise((resolve, reject) => {
-                image.onload = () => {
-                    resolve();
-                };
-            });
-            ctx.drawImage(image, 0, 0);
-        }
+        // {
+        //     const image = new Image();
+        //     image.src = "./resource/头像模板-黄字.png";
+        //     await new Promise((resolve, reject) => {
+        //         image.onload = () => {
+        //             resolve();
+        //         };
+        //     });
+        //     ctx.drawImage(image, 0, 0);
+        // }
 
         if (IS_DEBUG) {
             ctx.beginPath();
@@ -139,7 +147,7 @@
 
     document.onreadystatechange = async () => {
         try {
-            const font = new FontFace('ws138', 'url("./resource/字魂138号-霸燃手书-3500常用字.ttf") format("truetype")');
+            const font = new FontFace('ws138', 'url("./resource/字魂220号-鸿雁手书.ttf") format("truetype")');
             await font.load();
             document.fonts.add(font);
             inputElement.onkeyup = inputElement.onchange = generate;
