@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>逐浪-头像生成器by逗年</title>
+    <title>燃夏-头像生成器by逗年</title>
     <style>
         * {
             font-size: 24px;
@@ -52,11 +52,11 @@
 
     const canvas = document.querySelector("canvas");
 
-    const MAX_HEIGHT = canvas.clientHeight / 2.9296875;
-    const MAX_WIDTH = canvas.clientWidth / 1.35;
+    const MAX_HEIGHT = canvas.clientHeight / 3.3684210526315788;
+    const MAX_WIDTH = canvas.clientWidth / 1.3333333333333333;
 
     const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
-    const TOP = canvas.clientHeight / 2.4;
+    const TOP = canvas.clientHeight / 2.3;
     const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
 
 
@@ -75,12 +75,12 @@
         // fontSize*length=MAX_WIDTH+fontSize / 4*length
         // MAX_WIDTH=fontSize*length-fontSize / 4*length
         // MAX_WIDTH/fontSize=length-length / 4
-        let fontSize = MAX_WIDTH / (length * 3 / 4);
+        let fontSize = MAX_WIDTH / (length * 1);
 
         if (fontSize > MAX_HEIGHT) {
             fontSize = MAX_HEIGHT;
         }
-        let offset = fontSize / 9.375;
+        let offset = fontSize / 20;
         const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
 
         console.log(`fontSize: ${fontSize}`);
@@ -98,7 +98,7 @@
 
         {
             ctx.font = `${fontSize}px ws138`;
-            ctx.fillStyle = '#FFE93B';
+            ctx.fillStyle = '#FFFFFF';
             for (let index = 0; index < this.value.length; index++) {
                 const maxIndex = this.value.length - 1;
                 ctx.fillText(
@@ -147,7 +147,7 @@
 
     document.onreadystatechange = async () => {
         try {
-            const font = new FontFace('ws138', 'url("./resource/字魂220号-鸿雁手书.ttf") format("truetype")');
+            const font = new FontFace('ws138', 'url("./resource/造字工房星岩体.ttf") format("truetype")');
             await font.load();
             document.fonts.add(font);
             inputElement.onkeyup = inputElement.onchange = generate;
