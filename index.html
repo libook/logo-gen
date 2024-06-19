@@ -55,10 +55,9 @@
     const MAX_HEIGHT = canvas.clientHeight / 3.3684210526315788;
     const MAX_WIDTH = canvas.clientWidth / 1.3333333333333333;
 
-    const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
-    const TOP = canvas.clientHeight / 2.245;
+    const LEFT = (canvas.clientWidth - MAX_WIDTH) / 1.85;
+    const TOP = canvas.clientHeight / 2.15;
     const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
-    const WORD_SPACING = canvas.clientWidth / 2;
 
 
     const ctx = canvas.getContext("2d");
@@ -76,12 +75,12 @@
         // fontSize*length=MAX_WIDTH+fontSize / 4*length
         // MAX_WIDTH=fontSize*length-fontSize / 4*length
         // MAX_WIDTH/fontSize=length-length / 4
-        let fontSize = MAX_WIDTH / (length * 1);
+        let fontSize = 244;
 
         if (fontSize > MAX_HEIGHT) {
             fontSize = MAX_HEIGHT;
         }
-        let offset = 0-fontSize/12;
+        let offset = fontSize/15;
         const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
 
         console.log(`fontSize: ${fontSize}`);
@@ -148,7 +147,7 @@
 
     document.onreadystatechange = async () => {
         try {
-            const font = new FontFace('ws138', 'url("./resource/AaKuangPaiShouShu-2.ttf") format("truetype")');
+            const font = new FontFace('ws138', 'url("./resource/优设标题黑.ttf") format("truetype")');
             await font.load();
             document.fonts.add(font);
             inputElement.onkeyup = inputElement.onchange = generate;
