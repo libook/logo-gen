@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>燃冬-头像生成器by逗年</title>
+    <title>珠峰-头像生成器by逗年</title>
     <style>
         * {
             font-size: 24px;
@@ -56,8 +56,9 @@
     const MAX_WIDTH = canvas.clientWidth / 1.3333333333333333;
 
     const LEFT = (canvas.clientWidth - MAX_WIDTH) / 2;
-    const TOP = canvas.clientHeight / 2.3;
+    const TOP = canvas.clientHeight / 2.245;
     const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
+    const WORD_SPACING = canvas.clientWidth / 2;
 
 
     const ctx = canvas.getContext("2d");
@@ -80,7 +81,7 @@
         if (fontSize > MAX_HEIGHT) {
             fontSize = MAX_HEIGHT;
         }
-        let offset = fontSize / 20;
+        let offset = 0-fontSize/12;
         const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
 
         console.log(`fontSize: ${fontSize}`);
@@ -98,7 +99,7 @@
 
         {
             ctx.font = `${fontSize}px ws138`;
-            ctx.fillStyle = '#005AC8';
+            ctx.fillStyle = '#FFFFFF';
             for (let index = 0; index < this.value.length; index++) {
                 const maxIndex = this.value.length - 1;
                 ctx.fillText(
@@ -147,7 +148,7 @@
 
     document.onreadystatechange = async () => {
         try {
-            const font = new FontFace('ws138', 'url("./resource/造字工房星岩体.ttf") format("truetype")');
+            const font = new FontFace('ws138', 'url("./resource/AaKuangPaiShouShu-2.ttf") format("truetype")');
             await font.load();
             document.fonts.add(font);
             inputElement.onkeyup = inputElement.onchange = generate;
