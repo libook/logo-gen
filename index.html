@@ -243,16 +243,23 @@
                         // 处理姓名
                         {
                             const FONT_SIZE = 183;
-                            const MARGIN_TOP = 255;
+                            const MARGIN_TOP = 374;
                             const MARGIN_LEFT = 10;
                             const CENTER_X = CANVAS_SIZE / 2;
 
-                            ctx.font = `${FONT_SIZE}px ysbth`;
                             ctx.fillStyle = '#FFFFFF';
                             ctx.textAlign = 'center';
+                            ctx.textBaseline="middle";
                             // ctx.letterSpacing = '10px';
+                            let fontSize;
                             const textDisplayLength = getTextDisplayLength(name, 0.6);
-                            ctx.fillText(name, CENTER_X, MARGIN_TOP + FONT_SIZE);
+                            if (textDisplayLength * FONT_SIZE > CANVAS_SIZE) {
+                                fontSize = CANVAS_SIZE / textDisplayLength;
+                            } else {
+                                fontSize = FONT_SIZE;
+                            }
+                            ctx.font = `${fontSize}px ysbth`;
+                            ctx.fillText(name, CENTER_X, MARGIN_TOP);
                         }
 
                         // 下载按钮
