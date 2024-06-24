@@ -148,7 +148,11 @@
 
             // 加载字体
             {
-                ctx.fillText('字体加载中，请稍候……', 0, canvas.clientHeight / 2);
+                ctx.fillStyle = '#000000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = "middle";
+                ctx.font = '20px sans-serif';
+                ctx.fillText('字体加载中，请稍候……', CANVAS_SIZE / 2, CANVAS_SIZE / 2);
                 const fontList = [
                     {
                         "name": "ysbth",
@@ -217,8 +221,9 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     // 默认字体样式
                     ctx.fillStyle = '#000000';
-                    ctx.textAlign = 'left';
-                    ctx.font = 'bold 100px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = "middle";
+                    ctx.font = '20px sans-serif';
 
                     // 先禁用下载按钮
                     {
@@ -228,7 +233,7 @@
                     }
 
                     if (name === '') {
-                        ctx.fillText('请填写姓名', 0, canvas.clientHeight / 2);
+                        ctx.fillText('请填写姓名', CANVAS_SIZE / 2, CANVAS_SIZE / 2);
                     } else {
                         // 处理图片
                         {
@@ -251,7 +256,7 @@
 
                             ctx.fillStyle = '#FFFFFF';
                             ctx.textAlign = 'center';
-                            ctx.textBaseline="middle";
+                            ctx.textBaseline = "middle";
                             // ctx.letterSpacing = '10px';
                             let fontSize;
                             const textDisplayLength = getTextDisplayLength(name, 0.6);
