@@ -1,163 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>珠峰-头像生成器by逗年</title>
     <style>
-        * {
-            font-size: 24px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f7f7f7;
         }
 
         .container {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 640px;
+            width: 100%;
         }
 
-        .container > * {
-            margin-top: 1em;
+        .form {
             display: flex;
-            flex-direction: row;
-            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
         }
 
-        button {
-            width: 4em;
-            font-size: 2em;
+        .form label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .form input,
+        .form select {
+            flex: 1;
+            padding: 8px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        canvas {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #download-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #download-btn button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #download-btn.disabled button {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        #download-btn button:hover {
+            background-color: #0056b3;
+        }
+
+        #download-btn.disabled button:hover {
+            background-color: gray;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .form label {
+                /* flex-direction: column; */
+                align-items: flex-start;
+            }
+
+            .form input,
+            .form select {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .hide {
+            display: none;
         }
 
         .sign {
-            font-size: 0.7em;
+            font-size: 17px;
             color: #868686;
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div>
-        <label for="name">请输入1-8个字：</label>
-        <input type="text" id="name" maxlength="8" size="12em" value="逗年">
-    </div>
-    <div>
-        <canvas width="640" height="640"></canvas>
-    </div>
-    <div>
-        <a><button>下载</button></a>
+    <div class="container">
+        <div class="form">
+            <label>
+                姓名：
+                <input type="text" id="name" maxlength="8" size="12em" value="陈丽颖">
+            </label>
+        </div>
+        <div>
+            <canvas></canvas>
+        </div>
+        <div>
+            <a id="download-btn" class="disabled"><button>下载</button></a>
+        </div>
     </div>
     <div>
         <p class="sign">by 逗年</p>
     </div>
-</div>
-<script>
-    const IS_DEBUG = false;
+    <script>
+        (async () => {
+            const CANVAS_SIZE = 640;
 
-    const canvas = document.querySelector("canvas");
+            const canvas = document.querySelector("canvas");
+            canvas.setAttribute('width', CANVAS_SIZE);
+            canvas.setAttribute('height', CANVAS_SIZE);
+            const ctx = canvas.getContext("2d");
 
-    const MAX_HEIGHT = canvas.clientHeight / 3.3684210526315788;
-    const MAX_WIDTH = canvas.clientWidth / 1.3333333333333333;
-
-    const LEFT = (canvas.clientWidth - MAX_WIDTH) / 1.85;
-    const TOP = canvas.clientHeight / 2.15;
-    const FONT_POSITION_MIDDLE_Y = TOP + MAX_HEIGHT / 2;
-
-
-    const ctx = canvas.getContext("2d");
-    const inputElement = document.getElementById('name');
-
-    {
-        ctx.font = `${canvas.clientWidth / 2.9296875}px ws138`;
-        ctx.fillText('字体加载中，请稍后……', 0, canvas.clientHeight / 2);
-    }
-
-    const generate = async function () {
-        const length = inputElement.value.length;
-
-        // let fontSize = (MAX_WIDTH+fontSize / 4*length) / length;
-        // fontSize*length=MAX_WIDTH+fontSize / 4*length
-        // MAX_WIDTH=fontSize*length-fontSize / 4*length
-        // MAX_WIDTH/fontSize=length-length / 4
-        let fontSize = 244;
-
-        if (fontSize > MAX_HEIGHT) {
-            fontSize = MAX_HEIGHT;
-        }
-        let offset = fontSize/15;
-        const fontPositionY = FONT_POSITION_MIDDLE_Y + fontSize / 4;
-
-        console.log(`fontSize: ${fontSize}`);
-
-        {
-            const image = new Image();
-            image.src = "./resource/头像模板-底图.png";
-            await new Promise((resolve, reject) => {
-                image.onload = () => {
-                    resolve();
-                };
-            });
-            ctx.drawImage(image, 0, 0);
-        }
-
-        {
-            ctx.font = `${fontSize}px ws138`;
-            ctx.fillStyle = '#FFFFFF';
-            for (let index = 0; index < this.value.length; index++) {
-                const maxIndex = this.value.length - 1;
-                ctx.fillText(
-                    this.value[index] ?? '',
-                    LEFT
-                    + MAX_WIDTH / 2 // midperpendicular
-                    - fontSize / 2 // position while there is only one character
-                    + (index - maxIndex / 2) * (fontSize - offset), // add character to the left or to the right
-                    fontPositionY,
-                    fontSize,
-                );
+            // 加载字体
+            {
+                ctx.fillText('字体加载中，请稍候……', 0, canvas.clientHeight / 2);
+                const fontList = [
+                    {
+                        "name": "ysbth",
+                        "url": "./resource/优设标题黑.ttf",
+                        "format": "truetype",
+                    },
+                ];
+                for (const { name, url, format } of fontList) {
+                    const font = new FontFace(name, `url("${url}") format("${format}")`);
+                    await font.load();
+                    document.fonts.add(font);
+                }
             }
-        }
 
-        // {
-        //     const image = new Image();
-        //     image.src = "./resource/头像模板-黄字.png";
-        //     await new Promise((resolve, reject) => {
-        //         image.onload = () => {
-        //             resolve();
-        //         };
-        //     });
-        //     ctx.drawImage(image, 0, 0);
-        // }
+            const nameElement = document.getElementById('name');
+            const downloadAnchorElement = document.getElementById('download-btn');
 
-        if (IS_DEBUG) {
-            ctx.beginPath();
-            ctx.rect(LEFT, TOP, MAX_WIDTH, MAX_HEIGHT);
-            ctx.stroke();
+            /**
+             * 计算字符串中ASCII字符的个数
+             * @param {string} string
+             * @returns {number}
+             */
+            const countAsciiCharacters = (string) => {
+                let asciiCount = 0;
+                for (let index = 0; index < string.length; index++) {
+                    if (string.charCodeAt(index) <= 127) {
+                        asciiCount++;
+                    }
+                }
+                return asciiCount;
+            }
 
-            ctx.beginPath();
-            ctx.rect(LEFT, FONT_POSITION_MIDDLE_Y, MAX_WIDTH, 1);
-            ctx.stroke();
+            /**
+             * 获取文本显示长度
+             * 字体文件中通常字母、数字的宽度小于中文
+             * @param string
+             * @param thinMultiple - 细体字放大倍数，通常为小数
+             * @returns {number} - 显示长度，乘以字体大小则为最终渲染长度
+             */
+            const getTextDisplayLength = (string, thinMultiple) => {
+                const textThinCount = countAsciiCharacters(string);
+                const textNormalCount = string.length - textThinCount;
+                return textThinCount * thinMultiple + textNormalCount;
+            };
 
-            ctx.beginPath();
-            ctx.arc(canvas.clientWidth / 2, canvas.clientHeight / 2, canvas.clientWidth / 2, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
+            /**
+             * 纵向绘制文字
+             * @param {CanvasRenderingContext2D} ctx - Canvas context
+             * @param {string} - 文字
+             * @param {number} marginLeft - 左边距
+             * @param {boolean} startOnTop - 从上面开始的位置
+             * @param {number} fontSize - 字体大小
+             */
+            const drawTextVertically = (ctx, text, marginLeft, startOnTop, fontSize) => {
+                for (const index in text) {
+                    const character = text[index];
+                    ctx.fillText(character, marginLeft, (startOnTop + fontSize) + fontSize * index);
+                }
+            };
 
-        {
-            const button = document.querySelector('a');
-            button.setAttribute('download', 'logo.png');
-            button.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-        }
-    };
+            const generate = async function () {
+                try {
+                    const name = nameElement.value;
 
-    document.onreadystatechange = async () => {
-        try {
-            const font = new FontFace('ws138', 'url("./resource/优设标题黑.ttf") format("truetype")');
-            await font.load();
-            document.fonts.add(font);
-            inputElement.onkeyup = inputElement.onchange = generate;
-            generate.call(inputElement);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+                    // 清空canvas内容
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // 默认字体样式
+                    ctx.fillStyle = '#000000';
 
+                    // 先禁用下载按钮
+                    {
+                        downloadAnchorElement.removeAttribute('download');
+                        downloadAnchorElement.removeAttribute('href');
+                        downloadAnchorElement.classList.add('disabled');
+                    }
 
-</script>
+                    if (name === '') {
+                        ctx.fillText('请填写姓名', 0, canvas.clientHeight / 2);
+                    } else {
+                        // 处理图片
+                        {
+                            const image = new Image();
+                            image.src = "./resource/头像模板-底图.png";
+                            await new Promise((resolve, reject) => {
+                                image.onload = () => {
+                                    resolve();
+                                };
+                            });
+                            ctx.drawImage(image, 0, 0);
+                        }
+
+                        // 处理姓名
+                        {
+                            const FONT_SIZE = 183;
+                            const MARGIN_TOP = 255;
+                            const MARGIN_LEFT = 10;
+                            const CENTER_X = CANVAS_SIZE / 2;
+
+                            ctx.font = `${FONT_SIZE}px ysbth`;
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.textAlign = 'center';
+                            // ctx.letterSpacing = '10px';
+                            const textDisplayLength = getTextDisplayLength(name, 0.6);
+                            ctx.fillText(name, CENTER_X, MARGIN_TOP + FONT_SIZE);
+                        }
+
+                        // 下载按钮
+                        {
+                            const date = new Date;
+                            downloadAnchorElement.setAttribute('download', `${name}.png`);
+                            downloadAnchorElement.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+                            downloadAnchorElement.classList.remove('disabled');
+                        }
+                    }
+                } catch (error) { console.error(error) }
+            };
+
+            nameElement.onkeyup = generate;
+
+            generate();
+        })().catch(error => { console.error(error) });
+    </script>
 </body>
+
 </html>
