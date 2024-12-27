@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>珠峰-头像生成器by逗年</title>
+    <title>瑞雪-头像生成器by逗年</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -155,8 +155,8 @@
                 ctx.fillText('字体加载中，请稍候……', CANVAS_SIZE / 2, CANVAS_SIZE / 2);
                 const fontList = [
                     {
-                        "name": "ysbth",
-                        "url": "./resource/优设标题黑.ttf",
+                        "name": "thefont",
+                        "url": "./resource/YouSheBiaoTiHei-2.ttf",
                         "format": "truetype",
                     },
                 ];
@@ -249,12 +249,12 @@
 
                         // 处理姓名
                         {
-                            const FONT_SIZE = 183;
-                            const MARGIN_TOP = 374;
+                            const FONT_SIZE = 180;
+                            const MARGIN_TOP = 350;
                             const MARGIN_LEFT = 10;
                             const CENTER_X = CANVAS_SIZE / 2;
 
-                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillStyle = '#FF6C21';
                             ctx.textAlign = 'center';
                             ctx.textBaseline = "middle";
                             // ctx.letterSpacing = '10px';
@@ -265,7 +265,7 @@
                             } else {
                                 fontSize = FONT_SIZE;
                             }
-                            ctx.font = `${fontSize}px ysbth`;
+                            ctx.font = `${fontSize}px thefont`;
                             ctx.fillText(name, CENTER_X, MARGIN_TOP);
                         }
 
